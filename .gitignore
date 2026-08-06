@@ -1,0 +1,22 @@
+# ---- Secrets / credentials ----
+.env
+credentials.json
+*.session
+my_bot.session
+
+# ---- Logs & runtime state ----
+exec.log
+restart.log
+leecher_pid
+note.online.json
+download_probe.log
+*.log
+
+# ---- Python caches ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ---- OS / editor ----
+.DS_Store
