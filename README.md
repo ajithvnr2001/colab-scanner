@@ -4,7 +4,7 @@
 
 An **end-to-end automation stack** that keeps a Google Colab notebook — a **Telegram "Leecher" bot** — running continuously on a **free, CPU-only Colab session**.
 
-The notebook builds a `songlist.txt` from an Apple Music playlist, then the bot downloads every track (in **ALAC / AAC-LC / Atmos** formats) and **mirrors the files to a Telegram channel**, resuming exactly where it left off after every restart.
+The notebook builds a `songlist.txt` from an **Oracle Cloud object-storage URL** (cell 1) that holds your songlist, then the bot downloads every track (in **ALAC / AAC-LC / Atmos** formats) and **mirrors the files to a Telegram channel**, resuming exactly where it left off after every restart.
 
 What this repository actually adds on top of the notebook is the **self-healing watchdog** — it force-restarts the Colab session on a fixed cadence, and it **re-fetches the notebook from Google Drive** on every run so that any edits you make (e.g. updating the songlist) always take effect. No local/online drift, no stalled bots.
 
@@ -160,8 +160,9 @@ An earlier design only restarted the bot **when it was detected dead** (checking
 > The notebook also has optional fields (`AM_AUTH_TOKEN`, `S3_REGION`, `S3_BUCKET_NAME`, `S3_ENDPOINT_URL`) that are not secrets and can stay as-is / be configured to your bucket.
 
 ### What the notebook does, cell by cell
-- **Cell 1 — songlist builder:** constructs `songlist.txt` containing the full A.R. Rahman Apple Music playlist (1,456 tracks grouped by album).
-- **Cell 2 — the Leecher bot:** clones the Telegram-Leecher repo, installs OS deps (`ffmpeg`, `aria2`, `gpac`), writes `credentials.json`, and launches the Pyrogram bot event loop that downloads each song in all three formats and mirrors them to your Telegram channel. It keeps its own **resume/dedupe state** so interrupted tracks are picked back up after every restart.
+- **Cell 0 (markdown):** a free-form header note.
+- **Cell 1 — songlist fetcher:** downloads `songlist.txt` from an **Oracle Cloud object-storage URL** (public pre-signed bucket) instead of building it inline, so the songlist can be updated server-side without editing the notebook.
+- **Cell 2 — the Leecher bot:** clones the `Telegram-Leecher` repo, installs OS deps (`ffmpeg`, `aria2`, `gpac`), writes `credentials.json`, and launches the Pyrogram bot event loop that downloads each song in all three formats and mirrors them to your Telegram channel. It keeps its own **resume/dedupe state** so interrupted tracks are picked back up after every restart.
 
 ---
 
